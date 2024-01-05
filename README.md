@@ -7,6 +7,16 @@ This is a simple notes app built with React and Django.
 3. React
 
 ## jenkins steps
+
+Permission for setup jenkins(sometimes you can see some error and using these cmd you can quickly fix issue) 
+```
+sudo chmod -aG docker $USER
+sudo chmod -aG docker jenkins
+
+sudo chown $USER /var/run/docker.sock
+sudo chmod 777 /var/run/docker.sock
+
+```
 1. Clone the repository
 ```
 stage('code cloned'){
