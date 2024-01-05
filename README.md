@@ -9,7 +9,12 @@ This is a simple notes app built with React and Django.
 ## jenkins steps
 1. Clone the repository
 ```
-git clone https://github.com/Hemantjangir53/django-notes-app.git
+stage('code cloned'){
+                steps {
+                    git url: "https://github.com/Hemantjangir53/django-notes-app", branch: "main"
+                    echo 'clode cloned successfully'
+                }
+            }
 ```
 
 2. Build the app
