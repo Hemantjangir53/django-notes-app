@@ -19,7 +19,12 @@ stage('code cloned'){
 
 2. Build the app
 ```
-docker build -t notes-app .
+stage('Build'){
+                steps {
+                    sh 'docker build . -t django-notes-app'
+                    echo 'code build'
+                }
+            }
 ```
 
 3. push to dockerHub
@@ -45,7 +50,13 @@ stage('push to docker Hub') {
 
 4. Run the app
 ```
-docker run -d -p 8000:8000 notes-app:latest
+stage('Deploy'){
+                steps{
+                  //  sh 'docker run -d -p 8000:8000 hemantjangir/django-notes-app:latest'
+                    sh 'docker-compose down && docker-compose up -d'
+                    echo "deployed the container"
+                }
+            }
 ```
 ![Screenshot from 2023-12-20 19-33-33](https://github.com/Hemantjangir53/django-notes-app/assets/146804084/6b41ecf8-823b-4573-85c4-abaa09c29258)
 
