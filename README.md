@@ -6,7 +6,7 @@ This is a simple notes app built with React and Django.
 2. Node.js
 3. React
 
-## Installation
+## jenkins steps
 1. Clone the repository
 ```
 git clone https://github.com/Hemantjangir53/django-notes-app.git
@@ -17,7 +17,28 @@ git clone https://github.com/Hemantjangir53/django-notes-app.git
 docker build -t notes-app .
 ```
 
-3. Run the app
+3. push to dockerHub
+```
+stage('push to docker Hub') {
+            steps {
+                withCredentials([
+                        usernamePassword(
+                            credentialsId: 'dockerHub',
+                            usernameVariable: 'DOCKER_USERNAME',
+                            passwordVariable: 'DOCKER_PASSWORD')]){
+                                
+                                sh "docker tag node-todo-app ${env.DOCKER_USERNAME}/node-todo-app:latest"
+                                sh "docker login -u ${env.DOCKER_USERNAME} -p ${env.DOCKER_PASSWORD}"
+                                sh "docker push ${env.DOCKER_USERNAME}/node-todo-app:latest"
+                                
+                    }
+                
+                echo "code push"
+            }
+        }
+```
+
+4. Run the app
 ```
 docker run -d -p 8000:8000 notes-app:latest
 ```
