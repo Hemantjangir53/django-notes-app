@@ -1,34 +1,39 @@
 pipeline {
     agent any 
-    
-    stages{
-        stage("Clone Code"){
+    stages {
+        stage('code clone') {
             steps {
-                echo "Cloning the code"
-                git url:"https://github.com/LondheShubham153/django-notes-app.git", branch: "main"
+                git url: "https://github.com/Hemantjangir53/django-notes-app.git", branch: "main"
+                echo "code cloned successfully"
             }
         }
-        stage("Build"){
+        stage('Build') {
             steps {
-                echo "Building the image"
-                sh "docker build -t my-note-app ."
+                sh 'docker build . -t node-todo-app'
+                echo "code build successfully"
             }
         }
-        stage("Push to Docker Hub"){
+        stage('push to docker Hub') {
             steps {
-                echo "Pushing the image to docker hub"
-                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
-                sh "docker tag my-note-app ${env.dockerHubUser}/my-note-app:latest"
-                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                sh "docker push ${env.dockerHubUser}/my-note-app:latest"
-                }
-            }
-        }
-        stage("Deploy"){
-            steps {
-                echo "Deploying the container"
-                sh "docker-compose down && docker-compose up -d"
                 
+                withCredentials([
+                        usernamePassword(
+                            credentialsId: 'dockerHub',
+                            usernameVariable: 'DOCKERHUB_USERNAME',
+                            passwordVariable: 'DOCKERHUB_PASSWORD')]){
+                                sh "docker tag node-todo-app ${env.DOCKERHUB_USERNAME}/node-todo-app:latest" // image tag
+                                sh "docker login -u ${env.DOCKERHUB_USERNAME} -p ${env.DOCKERHUB_PASSWORD}"
+                                sh "docker push ${env.DOCKERHUB_USERNAME}/node-todo-app:latest"  // image name-> <dockerhub_user_name>/image_name
+                    }
+                
+                echo "code push"
+            }
+        }
+        stage('deploy') {
+            steps {
+                //sh "docker run -d -p 8000:8000 hemantjangir/node-todo-app:latest"
+                sh 'docker-compose down && docker-compose up -d'
+                echo "container deploy"
             }
         }
     }
